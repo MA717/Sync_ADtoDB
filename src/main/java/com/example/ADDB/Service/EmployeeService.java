@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +28,8 @@ public class EmployeeService {
     public void init_DB() {
         List<EmployeeModel> employeeList = employeeRepositoryldap.queryMany(new LdapQueryAllEmployees());
         for (int i = 0; i < employeeList.size(); i++) {
-            Boolean result = saveEmployee(employeeList.get(i));
-            if (result == false) {
+            Employee employee=  saveEmployee(employeeList.get(i));
+            if (employee == null) {
                 log.info("Error occured when trying to add employe with index {} and givenName", i, employeeList.get(i).getGivenName());
             }
         }
@@ -54,6 +53,15 @@ public class EmployeeService {
         return extractManagerName;
     }
 
+
+    public void connectEmpWithManager( EmployeeModel employee){
+     Employee employee1 = employeeRepository.findByUsername(employee.getUsername());
+     List<String>managerName = getManagerFirstAndLastName(employee);
+     Employee manager = employeeRepository.findByFirstNameAndLastName(managerName.get(0) , managerName.get(1));
+     employee1.setManager(manager);
+     employeeRepository.save(employee1);
+    }
+
     public void connectEmpWithManager(List<EmployeeModel> employelList) {
         for (int i = 0; i < employelList.size(); i++) {
             Employee employee = employeeRepository.findByUsername(employelList.get(i).getUsername());
@@ -69,7 +77,7 @@ public class EmployeeService {
         }
     }
 
-    public boolean saveEmployee(EmployeeModel employeeModel) {
+    public Employee saveEmployee(EmployeeModel employeeModel) {
         Employee employee = Employee.builder()
                 .email(employeeModel.getEmail())
                 .department(employeeModel.getDepartment())
@@ -82,9 +90,8 @@ public class EmployeeService {
                 .build();
 
         Employee employee1 = employeeRepository.save(employee);
-        if (employee1 != null) {
-            return true;
-        } else return false;
+
+        return employee1 ;
     }
 
 
