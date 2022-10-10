@@ -19,7 +19,7 @@ public class EmployeesEndpoint {
 
     private final EmployeeService personServ;
     private final EmployeeServiceSync personSync;
-    @GetMapping("")
+    @GetMapping("/init_db")
     public Boolean  allEmployees() {
 
         personServ.init_DB();
