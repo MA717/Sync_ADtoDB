@@ -9,9 +9,6 @@ import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class AdDbSyncronizerApplication {
-	@Autowired
-	private  ApplicationContext applicationContext;
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(AdDbSyncronizerApplication.class, args);

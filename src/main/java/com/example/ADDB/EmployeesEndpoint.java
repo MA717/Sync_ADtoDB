@@ -3,6 +3,7 @@ package com.example.ADDB;
 import com.example.ADDB.Model.EmployeeModel;
 
 import com.example.ADDB.Service.EmployeeService;
+import com.example.ADDB.Service.EmployeeServiceSync;
 import com.example.ADDB.ldap.queries.EmployeeRepositoyLdap;
 import com.example.ADDB.ldap.queries.LdapQueryAllEmployees;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 public class EmployeesEndpoint {
 
     private final EmployeeService personServ;
-
+    private final EmployeeServiceSync personSync;
     @GetMapping("")
     public Boolean  allEmployees() {
 
@@ -25,5 +26,10 @@ public class EmployeesEndpoint {
         return true;
 
 
+    }
+
+    @GetMapping("/syncronize")
+    public void beginSyncronization(){
+        personSync.dbtoAdSyncronization();
     }
 }

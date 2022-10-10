@@ -47,10 +47,10 @@ public class Employee {
 
     @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id", nullable = true)
-    Employee manager ;
+    Employee manager;
 
 
-    public List<Changes> equals(EmployeeModel employee){
+    public List<Changes> equals(EmployeeModel employee, Employee manager) {
         List<Changes> changesList = new ArrayList<>();
 
         if (!this.getDepartment().equals(employee.getDepartment())) {
@@ -58,24 +58,57 @@ public class Employee {
             //Veränderung in Department passiert
             changesList.add(Changes.DEPARTMENT_Change);
         }
-        if (!this.getEmail().equals(employee.getEmail())) {
+
+
+        if (this.getEmail() != null) {
+            if (!this.getEmail().equals(employee.getEmail())) {
+                this.setEmail(employee.getEmail());
+                changesList.add(Changes.EMAIL_Change);
+            }
+        } else if (employee.getEmail() != null) {
             this.setEmail(employee.getEmail());
             changesList.add(Changes.EMAIL_Change);
+
         }
-        if (!this.getTelephoneNumber().equals(employee.getTelephoneNumber())) {
+
+
+        if (this.getTelephoneNumber() != null) {
+            if (!this.getTelephoneNumber().equals(employee.getTelephoneNumber())) {
+                this.setTelephoneNumber(employee.getTelephoneNumber());
+                changesList.add(Changes.TELEPHONENUMBER_Change);
+            }
+        } else if (employee.getTelephoneNumber() != null) {
             this.setTelephoneNumber(employee.getTelephoneNumber());
             changesList.add(Changes.TELEPHONENUMBER_Change);
         }
+
+
         if (!this.getTitle().equals(employee.getTitle())) {
             this.setSurname(employee.getSurname());
             changesList.add(Changes.TITLE_Change);
         }
-        if (!this.getMobileNumber().equals(employee.getMobileNumber())) {
+
+
+        if (this.getMobileNumber() != null) {
+            if (!(this.getMobileNumber() == employee.getMobileNumber())) {
+                this.setMobileNumber(employee.getMobileNumber());
+                changesList.add(Changes.MOBILENUMBER_Change);
+            }
+        } else if (employee.getMobileNumber() != null) {
             this.setMobileNumber(employee.getMobileNumber());
             changesList.add(Changes.MOBILENUMBER_Change);
         }
 
-        return changesList ;
+        if (this.getManager() != null) {
+            if (this.getManager().getId() != manager.getId()) {
+                this.setManager(manager);
+                changesList.add(Changes.MANAGER_Change);
+            }
+        } else if (manager != null) {
+            this.setManager(manager);
+            changesList.add(Changes.MANAGER_Change);
+        }
+        return changesList;
 
     }
 }

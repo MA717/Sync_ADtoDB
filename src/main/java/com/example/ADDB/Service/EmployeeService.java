@@ -43,22 +43,33 @@ public class EmployeeService {
 
         List<String> extractManagerName = new ArrayList<>();
         String manager = employee.getManager();
-        String managerName = manager.substring(manager.indexOf("=") + 1, manager.indexOf(","));
-        String firstName = managerName.substring(0, managerName.indexOf(" "));
-        String lastName = managerName.substring(managerName.indexOf(" ")+1);
+        if (manager != null ) {
+            String managerName = manager.substring(manager.indexOf("=") + 1, manager.indexOf(","));
+            String firstName = managerName.substring(0, managerName.indexOf(" "));
+            String lastName = managerName.substring(managerName.indexOf(" ") + 1);
 
-        extractManagerName.add(firstName);
-        extractManagerName.add(lastName);
+            extractManagerName.add(firstName);
+            extractManagerName.add(lastName);
 
-        return extractManagerName;
+            return extractManagerName;
+        }
+        else
+            return null ;
+    }
+
+    public Employee getManager (EmployeeModel employee )
+    {
+        List<String> managerName = getManagerFirstAndLastName(employee); // need to check if the manager of employee changed
+        if ( managerName != null ) {
+            return employeeRepository.findByFirstNameAndLastName(managerName.get(0), managerName.get(1));
+        }
+        else return  null ; // has no manager
     }
 
 
     public void connectEmpWithManager( EmployeeModel employee){
      Employee employee1 = employeeRepository.findByUsername(employee.getUsername());
-     List<String>managerName = getManagerFirstAndLastName(employee);
-     Employee manager = employeeRepository.findByFirstNameAndLastName(managerName.get(0) , managerName.get(1));
-     employee1.setManager(manager);
+     employee1.setManager(getManager(employee));
      employeeRepository.save(employee1);
     }
 
@@ -66,9 +77,7 @@ public class EmployeeService {
         for (int i = 0; i < employelList.size(); i++) {
             Employee employee = employeeRepository.findByUsername(employelList.get(i).getUsername());
             if (employelList.get(i).getManager() != null) {
-
-                List<String> managerName = getManagerFirstAndLastName(employelList.get(i));
-                Employee manager = employeeRepository.findByFirstNameAndLastName(managerName.get(0), managerName.get(1));
+             Employee manager = getManager(employelList.get(i));
                 if (manager != null) {
                     employee.setManager(manager);
                     employeeRepository.save(employee);
