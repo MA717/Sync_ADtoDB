@@ -2,11 +2,11 @@ spring:
   cloud:
     azure:
       eventhubs:
-        connection-string: Endpoint=sb://messegequeue-azure.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=tU4Pxy5oVGne1j+XOPdhW/KaedQyKD/1GFu35p3G8hA=
+        connection-string:
         processor:
           checkpoint-store:
             account-name: messagequeuestorage
-            account-key: 4fc9Rsqn2RZUQJuRthYUU99TXkbLTEdAdSJWcmWF+IU6Jzbpkyl5/9GYQwSorXzaYq1k/jZaOPKl+AStrsiDvg==
+            account-key: 
             container-name: topic
     stream:
       bindings:
