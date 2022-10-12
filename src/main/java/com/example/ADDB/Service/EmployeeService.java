@@ -59,11 +59,8 @@ public class EmployeeService {
 
     public Employee getManager (EmployeeModel employee )
     {
-        List<String> managerName = getManagerFirstAndLastName(employee); // need to check if the manager of employee changed
-        if ( managerName != null ) {
-            return employeeRepository.findByFirstNameAndLastName(managerName.get(0), managerName.get(1));
-        }
-        else return  null ; // has no manager
+        // List<String> managerName = getManagerFirstAndLastName(employee); // need to check if the manager of employee changed
+           return employeeRepository.findByDn (employee.getManager()) ;
     }
 
 
@@ -96,6 +93,7 @@ public class EmployeeService {
                 .username(employeeModel.getUsername())
                 .givenName(employeeModel.getGivenName())
                 .surname(employeeModel.getSurname())
+                .dn(employeeModel.getDn().toString())
                 .build();
 
         Employee employee1 = employeeRepository.save(employee);

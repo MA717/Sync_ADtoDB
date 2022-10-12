@@ -13,4 +13,6 @@ public interface EmployeeRepository extends JpaRepository<Employee,Long > {
 
     @Query( value = "SELECT * from Employee e where e.first_name = ?1 and e.last_name=?2 " , nativeQuery = true)
     Employee findByFirstNameAndLastName(String first_name , String last_name);
+
+    Employee findByDn(String manager);
 }

@@ -31,12 +31,14 @@ public class EmployeeRepositoyLdap {
     @Cacheable("employees")
     public List<EmployeeModel> queryMany(PredefinedLdapQuery query) {
 
+        // ldapTemplate.lookup() = find by id for ldap
         log.debug("Executing LDAP queryMany using {}", query.getClass().getName());
 
         List<EmployeeModel> searchResults = ldapTemplate.search(
                 query.buildQuery(ldapUserOU, attributeNames),
                 employeeAttributeMapper
         );
+
 
         log.debug("LDAP queryMany using {} returned {} results", query.getClass().getName(), searchResults.size());
 

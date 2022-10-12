@@ -1,6 +1,7 @@
 package com.example.ADDB.Service;
 
 import com.example.ADDB.Entity.Changes;
+import com.example.ADDB.Entity.Employee_Changes;
 import com.example.ADDB.Model.EmployeeModel;
 import com.example.ADDB.Repository.EmployeeRepository;
 import com.example.ADDB.Entity.Employee;
@@ -8,20 +9,28 @@ import com.example.ADDB.ldap.queries.EmployeeRepositoyLdap;
 import com.example.ADDB.ldap.queries.LdapQueryAllEmployees;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Sinks;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class EmployeeServiceSync {
+
+    @Autowired
+    public Sinks.Many<Message<Employee_Changes>> manyChanged;
+
     EmployeeRepositoyLdap employeeRepositoryldap;
     EmployeeRepository employeeRepository;
     EmployeeService employeeService;
     HashMap<Long, Boolean> updatedEmployee = new HashMap<>();
+
 
     public void dbtoAdSyncronization() {
 
@@ -58,11 +67,17 @@ public class EmployeeServiceSync {
 
     private void compareEmployeeAttribute(EmployeeModel employee) {
 
-
+        // employe model in ldap
         Employee employee1 = employeeRepository.findByUsername(employee.getUsername());
+        // gehe davon aus dass username attribute nicht verändert wird
         if (employee1 != null) {
             List<Changes> changesList = employee1.equals(employee , employeeService.getManager(employee));
             if (!changesList.isEmpty()) {
+              Employee_Changes employeeChanges =  Employee_Changes.builder().changesList(changesList).employee(employee1).build();
+                // object with the new attributes of the employee and the all the changed that occured
+
+                manyChanged.emitNext(MessageBuilder.withPayload(employeeChanges).build() , Sinks.EmitFailureHandler.FAIL_FAST);
+
                 //changes occured and saved in the changeList
                 log.info(" Changes has occured in the Employee");
                 employeeRepository.save(employee1);

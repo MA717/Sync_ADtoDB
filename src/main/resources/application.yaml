@@ -1,0 +1,33 @@
+spring:
+  cloud:
+    azure:
+      eventhubs:
+        connection-string: Endpoint=sb://messegequeue-azure.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=tU4Pxy5oVGne1j+XOPdhW/KaedQyKD/1GFu35p3G8hA=
+        processor:
+          checkpoint-store:
+            account-name: messagequeuestorage
+            account-key: 4fc9Rsqn2RZUQJuRthYUU99TXkbLTEdAdSJWcmWF+IU6Jzbpkyl5/9GYQwSorXzaYq1k/jZaOPKl+AStrsiDvg==
+            container-name: topic
+    stream:
+      bindings:
+
+        consume-in-0:
+          destination: messagequeuehub
+          group: consumer1
+        supply-out-0:
+          destination: messagequeuehub
+
+        supplyChange-out-0:
+          destination: messagequeuehub
+
+      eventhubs:
+        bindings:
+          consume-in-0:
+            consumer:
+              checkpoint:
+                mode: MANUAL
+      function:
+        definition: supply;supplyChange;consume;
+      poller:
+        initial-delay: 0
+        fixed-delay: 1000

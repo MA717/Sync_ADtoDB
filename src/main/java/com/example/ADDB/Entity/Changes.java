@@ -8,6 +8,12 @@ public enum Changes {
     MANAGER_Change,
     TITLE_Change,
     DEPARTMENT_Change,
+    TELEPHONENUMBER_Change,
 
-    TELEPHONENUMBER_Change
+    NEWEMPLOYEE_Created,
+
+    EMPLOYEE_DELETED
+
+
+
 }

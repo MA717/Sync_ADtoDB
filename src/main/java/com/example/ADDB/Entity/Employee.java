@@ -29,6 +29,8 @@ public class Employee {
     @Column(name = "first_name")
     private String givenName;
 
+    private String dn ;
+
     @Column(name = "last_name")
     @JsonProperty("lastName")
     private String surname;
@@ -52,6 +54,17 @@ public class Employee {
 
     public List<Changes> equals(EmployeeModel employee, Employee manager) {
         List<Changes> changesList = new ArrayList<>();
+
+        if (!this.getGivenName().equals(employee.getGivenName())){
+            this.setGivenName(employee.getGivenName());
+            changesList.add(Changes.FIRSTNAME_Change);
+        }
+
+        if(!this.getSurname().equals(employee.getSurname())){
+            this.setSurname(employee.getSurname());
+            changesList.add(Changes.SURNAME_Change);
+        }
+
 
         if (!this.getDepartment().equals(employee.getDepartment())) {
             this.setDepartment(employee.getDepartment());
@@ -84,7 +97,7 @@ public class Employee {
 
 
         if (!this.getTitle().equals(employee.getTitle())) {
-            this.setSurname(employee.getSurname());
+            this.setTitle(employee.getTitle());
             changesList.add(Changes.TITLE_Change);
         }
 
