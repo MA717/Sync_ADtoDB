@@ -1,35 +1,29 @@
 package com.example.ADDB;
 
-import com.example.ADDB.Model.EmployeeModel;
-
 import com.example.ADDB.Service.EmployeeService;
 import com.example.ADDB.Service.EmployeeServiceSync;
-import com.example.ADDB.ldap.queries.EmployeeRepositoyLdap;
-import com.example.ADDB.ldap.queries.LdapQueryAllEmployees;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/employees", produces="application/json")
+@RequestMapping(value = "/employees", produces = "application/json")
 
 public class EmployeesEndpoint {
 
     private final EmployeeService personServ;
     private final EmployeeServiceSync personSync;
+
     @GetMapping("/init_db")
-    public Boolean  allEmployees() {
-
-        personServ.init_DB();
-        return true;
-
+    public void allEmployees() {
+        personServ.initDb();
 
     }
 
     @GetMapping("/syncronize")
-    public void beginSyncronization(){
+    public void beginSyncronization() {
         personSync.dbtoAdSyncronization();
     }
 }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
 
 import javax.persistence.*;
 import java.security.PublicKey;
@@ -50,6 +52,7 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id", nullable = true)
     Employee manager;
+
 
 
     public List<Changes> equals(EmployeeModel employee, Employee manager) {

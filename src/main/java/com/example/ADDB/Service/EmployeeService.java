@@ -1,6 +1,7 @@
 package com.example.ADDB.Service;
 
 import com.example.ADDB.Entity.Employee;
+import com.example.ADDB.Entity.EmployeeMapper;
 import com.example.ADDB.Model.EmployeeModel;
 import com.example.ADDB.Repository.EmployeeRepository;
 import com.example.ADDB.ldap.queries.EmployeeRepositoyLdap;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,14 +27,12 @@ public class EmployeeService {
     }
 
 
-    public void init_DB() {
+    public void initDb() {
         List<EmployeeModel> employeeList = employeeRepositoryldap.queryMany(new LdapQueryAllEmployees());
-        for (int i = 0; i < employeeList.size(); i++) {
-            Employee employee=  saveEmployee(employeeList.get(i));
-            if (employee == null) {
-                log.info("Error occured when trying to add employe with index {} and givenName", i, employeeList.get(i).getGivenName());
-            }
-        }
+
+        employeeList.stream()
+                .filter(x -> x != null)
+                .forEach(x -> saveEmployee(x));
 
         connectEmpWithManager(employeeList);
 
@@ -43,7 +43,7 @@ public class EmployeeService {
 
         List<String> extractManagerName = new ArrayList<>();
         String manager = employee.getManager();
-        if (manager != null ) {
+        if (manager != null) {
             String managerName = manager.substring(manager.indexOf("=") + 1, manager.indexOf(","));
             String firstName = managerName.substring(0, managerName.indexOf(" "));
             String lastName = managerName.substring(managerName.indexOf(" ") + 1);
@@ -52,53 +52,42 @@ public class EmployeeService {
             extractManagerName.add(lastName);
 
             return extractManagerName;
-        }
-        else
-            return null ;
+        } else
+            return null;
     }
 
-    public Employee getManager (EmployeeModel employee )
-    {
-        // List<String> managerName = getManagerFirstAndLastName(employee); // need to check if the manager of employee changed
-           return employeeRepository.findByDn (employee.getManager()) ;
+    public Employee getManager(EmployeeModel employee) {
+        return employeeRepository.findByDn(employee.getManager());
     }
 
 
-    public void connectEmpWithManager( EmployeeModel employee){
-     Employee employee1 = employeeRepository.findByUsername(employee.getUsername());
-     employee1.setManager(getManager(employee));
-     employeeRepository.save(employee1);
+    public void connectEmpWithManager(EmployeeModel employee) {
+        Employee employee1 = employeeRepository.findByUsername(employee.getUsername());
+        employee1.setManager(getManager(employee));
+        employeeRepository.save(employee1);
     }
 
     public void connectEmpWithManager(List<EmployeeModel> employelList) {
-        for (int i = 0; i < employelList.size(); i++) {
-            Employee employee = employeeRepository.findByUsername(employelList.get(i).getUsername());
-            if (employelList.get(i).getManager() != null) {
-             Employee manager = getManager(employelList.get(i));
+
+        for (EmployeeModel employeeModel : employelList) {
+            Employee employee = employeeRepository.findByUsername(employeeModel.getUsername());
+            if (employee.getManager() != null) {
+                Employee manager = getManager(employeeModel);
                 if (manager != null) {
                     employee.setManager(manager);
                     employeeRepository.save(employee);
                 }
             }
         }
+
+
     }
 
     public Employee saveEmployee(EmployeeModel employeeModel) {
-        Employee employee = Employee.builder()
-                .email(employeeModel.getEmail())
-                .department(employeeModel.getDepartment())
-                .title(employeeModel.getTitle())
-                .mobileNumber(employeeModel.getMobileNumber())
-                .telephoneNumber(employeeModel.getTelephoneNumber())
-                .username(employeeModel.getUsername())
-                .givenName(employeeModel.getGivenName())
-                .surname(employeeModel.getSurname())
-                .dn(employeeModel.getDn().toString())
-                .build();
 
-        Employee employee1 = employeeRepository.save(employee);
+        Employee employee = EmployeeMapper.INSTANCE.employeeModeltoEmployee(employeeModel);
+           return  employeeRepository.save(employee);
 
-        return employee1 ;
     }
 
 
