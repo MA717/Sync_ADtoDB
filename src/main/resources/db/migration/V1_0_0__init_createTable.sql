@@ -9,6 +9,6 @@ Create Table Employee(
     telephone_number varchar(255),
     title varchar(255),
     username varchar(255) not null ,
-    dn varchar(255) not null ,
+    dn varchar(255) not null   ,
     primary key (id)
 );

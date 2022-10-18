@@ -16,7 +16,12 @@ public class EmployeesEndpoint {
     private final EmployeeService personServ;
     private final EmployeeServiceSync personSync;
 
-    @GetMapping("/init_db")
+
+    @GetMapping("/consumerInitializer")
+    public  void initializer () {
+        personSync.consumerInitializer();
+    }
+    @GetMapping("/initdb")
     public void allEmployees() {
         personServ.initDb();
 

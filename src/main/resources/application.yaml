@@ -1,4 +1,42 @@
+mt:
+  els:
+    ldap:
+      user-ou: ${MT_ELS_LDAP_USER_OU:OU=Mitarbeiter}
+      attribute-names:
+        givenName: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_GIVEN_NAME:givenName}
+        surname: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_SURNAME:sn}
+        objectClass: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_OBJECT_CLASS:objectClass}
+        directReports: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_DIRECT_REPORTS:directReports}
+        username: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_USER_NAME:sAMAccountName}
+        email: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_EMAIL:mail}
+        telephoneNumber: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_TELEPHONE_NUMBER:telephoneNumber}
+        title: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_TITLE:title}
+        mobileNumber: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_MOBILE:mobile}
+        department: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_DEPARTMENT:department}
+        manager: ${MT_ELS_LDAP_ATTRIBUTE_NAMES_MANAGER:manager}
+    cors:
+      allowed-origins: ${MT_ELS_CORS_ALLOWED_ORIGINS:localhost:4200}
+
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: mysecretpassword
+    platform: postgres
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    baseline-on-migrate: true
+
+  ldap:
+    base: ${MT_ELS_LDAP_BASE_DN:DC=testdom,DC=local}
+    password: ${MT_ELS_LDAP_BIND_PASSWORD:}
+    username: ${MT_ELS_LDAP_BIND_DN:Administrator@testdom.local}
+    urls: ${MT_ELS_LDAP_URLS:ldap://172.26.71.151}
   cloud:
     azure:
       eventhubs:
@@ -11,14 +49,15 @@ spring:
     stream:
       bindings:
 
-        consume-in-0:
-          destination: messagequeuehub
-          group: consumer1
-        supply-out-0:
-          destination: messagequeuehub
-
         supplyChange-out-0:
           destination: messagequeuehub
+          group: updategroup
+
+
+        supplyEmployees-out-0:
+          destination: eventinitialiser
+
+
 
       eventhubs:
         bindings:
@@ -27,7 +66,9 @@ spring:
               checkpoint:
                 mode: MANUAL
       function:
-        definition: supply;supplyChange;consume;
+        definition: supplyChange;supplyEmployees;
       poller:
         initial-delay: 0
         fixed-delay: 1000
+server:
+  port: 8082

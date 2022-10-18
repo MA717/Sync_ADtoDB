@@ -16,7 +16,8 @@ public interface EmployeeMapper {
 
     @Mapping(target = "manager", ignore = true)
     Employee employeeModeltoEmployee(EmployeeModel employeeModel);
-    default String map (Name dn ){
-        return dn.toString() ;
+
+    default String map(Name dn) {
+        return dn.toString();
     }
 }
