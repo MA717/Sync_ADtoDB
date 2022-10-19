@@ -18,13 +18,13 @@ public class EmployeesEndpoint {
 
 
     @GetMapping("/consumerInitializer")
-    public  void initializer () {
+    public void initializer() {
         personSync.consumerInitializer();
     }
+
     @GetMapping("/initdb")
     public void allEmployees() {
         personServ.initDb();
-
     }
 
     @GetMapping("/syncronize")

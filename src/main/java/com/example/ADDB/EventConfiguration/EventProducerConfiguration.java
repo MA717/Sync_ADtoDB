@@ -4,7 +4,6 @@ package com.example.ADDB.EventConfiguration;
 import com.example.ADDB.Entity.Employee;
 import com.example.ADDB.Entity.Employee_Changes;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -12,8 +11,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Supplier;
+
 @Slf4j
 @Configuration
 public class EventProducerConfiguration {
@@ -53,8 +52,8 @@ public class EventProducerConfiguration {
 
     @Bean
     public Supplier<Flux<Message<Collection<Employee>>>> supplyEmployees(Sinks.Many<Message<Collection<Employee>>> employeeBucket) {
-        return ()-> employeeBucket.asFlux()
-                .doOnNext(m-> log.info("Manually sending all Employees {}", m ))
+        return () -> employeeBucket.asFlux()
+                .doOnNext(m -> log.info("Manually sending all Employees {}", m))
                 .doOnError(t -> log.error("Error encountered", t));
     }
 
