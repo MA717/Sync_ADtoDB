@@ -102,7 +102,10 @@ public class Employee {
             if (valueChange.getPropertyName().equals("email")) {
                 this.setEmail((String) valueChange.getRight());
                 changes.add(Changes.EMAIL_Change);
-
+            }
+            if(valueChange.getPropertyName().equals("username")) {
+                this.setUsername( (String) valueChange.getRight());
+                changes.add(Changes.USERNAME_Change);
             }
             if (valueChange.getPropertyName().equals("telephoneNumber")) {
                 this.setTelephoneNumber((String) valueChange.getRight());
