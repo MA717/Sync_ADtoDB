@@ -102,7 +102,6 @@ public class EmployeeServiceSync {
 
     private void compareEmployeeAttribute(EmployeeModel employeeModel, Set<Long> presentedEmployee) {
 
-        // employe model in ldap
         employeeRepository
                 .findByDn(employeeModel.getDn().toString())
                 .ifPresentOrElse((employee1) -> {

@@ -26,8 +26,10 @@ public class EmployeeService {
 
         employeeList.stream()
                 .filter(x -> x != null)
+                .filter(x -> !employeeRepository.findByDn(x.getDn().toString()).isPresent())
                 .forEach(x -> saveEmployee(x));
-        connectEmpWithManager(employeeList);
+
+        connectEmployeessWithManagers(employeeList);
 
     }
 
@@ -37,28 +39,22 @@ public class EmployeeService {
     }
 
 
-    public void connectEmpWithManager(EmployeeModel employee) {
-        Employee employee1 = employeeRepository.findByUsername(employee.getUsername());
-        employee1.setManager(getManager(employee).get());
-        employeeRepository.save(employee1);
+    public void connectEmpWithManager(EmployeeModel employeeModel) {
+        employeeRepository.findByDn(employeeModel.getDn().toString())
+                .ifPresent((employee) -> {
+                    getManager(employeeModel).ifPresent((manager) -> {
+                                employee.setManager(manager);
+                                employeeRepository.save(employee);
+                            }
+                    );
+
+                });
+
     }
 
-    public void connectEmpWithManager(List<EmployeeModel> employelList) {
-
-        for (EmployeeModel employeeModel : employelList) {
-            employeeRepository.findByDn(employeeModel.getDn().toString())
-                    .ifPresent((employee) -> {
-                        getManager(employeeModel).ifPresent((manager) -> {
-                                    employee.setManager(manager);
-                                    employeeRepository.save(employee);
-                                }
-                        );
-
-                    });
-
-
-        }
-
+    public void connectEmployeessWithManagers(List<EmployeeModel> employelList) {
+        employelList.stream()
+                .forEach(employee -> connectEmpWithManager(employee));
 
     }
 
