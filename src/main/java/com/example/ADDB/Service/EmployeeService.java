@@ -10,9 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,11 +20,6 @@ public class EmployeeService {
     EmployeeRepository employeeRepository;
     EmployeeRepositoyLdap employeeRepositoryldap;
 
-    public boolean addEmployee(Employee employee) {
-        employeeRepository.save(employee);
-        return true;
-    }
-
 
     public void initDb() {
         List<EmployeeModel> employeeList = employeeRepositoryldap.queryMany(new LdapQueryAllEmployees());
@@ -33,37 +27,19 @@ public class EmployeeService {
         employeeList.stream()
                 .filter(x -> x != null)
                 .forEach(x -> saveEmployee(x));
-
         connectEmpWithManager(employeeList);
 
     }
 
 
-    public List<String> getManagerFirstAndLastName(EmployeeModel employee) {
-
-        List<String> extractManagerName = new ArrayList<>();
-        String manager = employee.getManager();
-        if (manager != null) {
-            String managerName = manager.substring(manager.indexOf("=") + 1, manager.indexOf(","));
-            String firstName = managerName.substring(0, managerName.indexOf(" "));
-            String lastName = managerName.substring(managerName.indexOf(" ") + 1);
-
-            extractManagerName.add(firstName);
-            extractManagerName.add(lastName);
-
-            return extractManagerName;
-        } else
-            return null;
-    }
-
-    public Employee getManager(EmployeeModel employee) {
-        return employeeRepository.findByDn(employee.getManager());
+    public Optional<Employee> getManager(EmployeeModel employee) {
+                return Optional.ofNullable(employeeRepository.findByDn(employee.getManager())).orElse(null)  ;
     }
 
 
     public void connectEmpWithManager(EmployeeModel employee) {
         Employee employee1 = employeeRepository.findByUsername(employee.getUsername());
-        employee1.setManager(getManager(employee));
+        employee1.setManager(getManager(employee).get());
         employeeRepository.save(employee1);
     }
 
@@ -72,7 +48,7 @@ public class EmployeeService {
         for (EmployeeModel employeeModel : employelList) {
             Employee employee = employeeRepository.findByUsername(employeeModel.getUsername());
             if (employee.getManager() != null) {
-                Employee manager = getManager(employeeModel);
+                Employee manager = getManager(employeeModel).get();
                 if (manager != null) {
                     employee.setManager(manager);
                     employeeRepository.save(employee);
@@ -86,7 +62,7 @@ public class EmployeeService {
     public Employee saveEmployee(EmployeeModel employeeModel) {
 
         Employee employee = EmployeeMapper.INSTANCE.employeeModeltoEmployee(employeeModel);
-           return  employeeRepository.save(employee);
+        return employeeRepository.save(employee);
 
     }
 

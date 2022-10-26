@@ -1,11 +1,14 @@
 package com.example.ADDB;
 
+import com.example.ADDB.Entity.Employee;
 import com.example.ADDB.Service.EmployeeService;
 import com.example.ADDB.Service.EmployeeServiceSync;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,8 +21,8 @@ public class EmployeesEndpoint {
 
 
     @GetMapping("/consumerInitializer")
-    public void initializer() {
-        personSync.consumerInitializer();
+    public List<Employee> initializer() {
+        return personSync.consumerInitializer();
     }
 
     @GetMapping("/initdb")

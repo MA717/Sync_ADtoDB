@@ -22,7 +22,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: mysecretpassword
-    platform: postgres
 
   jpa:
     show-sql: true
@@ -36,7 +35,7 @@ spring:
     base: ${MT_ELS_LDAP_BASE_DN:DC=testdom,DC=local}
     password: ${MT_ELS_LDAP_BIND_PASSWORD:}
     username: ${MT_ELS_LDAP_BIND_DN:Administrator@testdom.local}
-    urls: ${MT_ELS_LDAP_URLS:ldap://172.25.37.174}
+    urls: ${MT_ELS_LDAP_URLS:ldap://172.25.142.255}
   cloud:
     azure:
       eventhubs:
@@ -51,12 +50,6 @@ spring:
 
         supplyChange-out-0:
           destination: messagequeuehub
-          group: updategroup
-
-
-        supplyEmployees-out-0:
-          destination: eventinitialiser
-
 
 
       eventhubs:
@@ -66,9 +59,12 @@ spring:
               checkpoint:
                 mode: MANUAL
       function:
-        definition: supplyChange;supplyEmployees;
+        definition: supplyChange;
       poller:
         initial-delay: 0
         fixed-delay: 1000
+  sql:
+    init:
+      platform: postgres
 server:
   port: 8082

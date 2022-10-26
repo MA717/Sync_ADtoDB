@@ -13,7 +13,6 @@ public interface EmployeeMapper {
 
     EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
 
-
     @Mapping(target = "manager", ignore = true)
     Employee employeeModeltoEmployee(EmployeeModel employeeModel);
 

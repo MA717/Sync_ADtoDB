@@ -12,6 +12,5 @@ import java.util.List;
 public class Employee_Changes {
 
     Employee employee ;
-
     List<Changes> changesList ;
 }
