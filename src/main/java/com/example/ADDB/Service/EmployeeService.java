@@ -33,7 +33,7 @@ public class EmployeeService {
 
 
     public Optional<Employee> getManager(EmployeeModel employee) {
-                return Optional.ofNullable(employeeRepository.findByDn(employee.getManager())).orElse(null)  ;
+        return Optional.ofNullable(employeeRepository.findByDn(employee.getManager())).orElse(null);
     }
 
 
@@ -46,14 +46,17 @@ public class EmployeeService {
     public void connectEmpWithManager(List<EmployeeModel> employelList) {
 
         for (EmployeeModel employeeModel : employelList) {
-            Employee employee = employeeRepository.findByUsername(employeeModel.getUsername());
-            if (employee.getManager() != null) {
-                Employee manager = getManager(employeeModel).get();
-                if (manager != null) {
-                    employee.setManager(manager);
-                    employeeRepository.save(employee);
-                }
-            }
+            employeeRepository.findByDn(employeeModel.getDn().toString())
+                    .ifPresent((employee) -> {
+                        getManager(employeeModel).ifPresent((manager) -> {
+                                    employee.setManager(manager);
+                                    employeeRepository.save(employee);
+                                }
+                        );
+
+                    });
+
+
         }
 
 

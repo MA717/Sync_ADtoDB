@@ -1,2 +1,3 @@
-delete from employee where id = 10 ;
+
+drop table employee;
 select * from employee
