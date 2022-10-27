@@ -5,10 +5,10 @@ import com.example.ADDB.entity.Changes;
 import com.example.ADDB.entity.Employee;
 import com.example.ADDB.entity.EmployeeMapper;
 import com.example.ADDB.entity.Employee_Changes;
-import com.example.ADDB.model.EmployeeModel;
-import com.example.ADDB.repository.EmployeeRepository;
 import com.example.ADDB.ldap.queries.EmployeeRepositoyLdap;
 import com.example.ADDB.ldap.queries.LdapQueryAllEmployees;
+import com.example.ADDB.model.EmployeeModel;
+import com.example.ADDB.repository.EmployeeRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -106,13 +106,11 @@ public class EmployeeServiceSync {
                 .findByDn(employeeModel.getDn().toString())
                 .ifPresentOrElse((employee1) -> {
                             List<Changes> changesList = employee1.compareChanges(employeeModeltoEmployeeMapper(employeeModel));
-                            log.info("Test Founded ");
                             if (!changesList.isEmpty()) {
                                 fireChangeEvent(employee1, changesList);
                             }
                             presentedEmployee.add(employee1.getId());
                         }, () -> {
-                            log.info("Test New Employee Founded ");
                             Employee employee = createEmployeeAction(employeeModel);
                             presentedEmployee.add(employee.getId());
 
