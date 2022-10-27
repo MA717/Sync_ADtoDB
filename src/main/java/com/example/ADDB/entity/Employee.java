@@ -1,4 +1,4 @@
-package com.example.ADDB.Entity;
+package com.example.ADDB.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

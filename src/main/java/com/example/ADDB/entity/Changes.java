@@ -1,4 +1,4 @@
-package com.example.ADDB.Entity;
+package com.example.ADDB.entity;
 
 public enum Changes {
     EMAIL_Change,

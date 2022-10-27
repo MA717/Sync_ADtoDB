@@ -1,6 +1,6 @@
 package com.example.ADDB.ldap;
 
-import com.example.ADDB.Model.EmployeeModel;
+import com.example.ADDB.model.EmployeeModel;
 import com.example.ADDB.config.LdapAttributeNames;
 
 import lombok.RequiredArgsConstructor;

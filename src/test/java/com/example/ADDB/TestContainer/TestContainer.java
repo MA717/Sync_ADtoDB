@@ -1,8 +1,7 @@
 package com.example.ADDB.TestContainer;
 
-import com.example.ADDB.Entity.Employee;
-import com.example.ADDB.Repository.EmployeeRepository;
-import lombok.AllArgsConstructor;
+import com.example.ADDB.entity.Employee;
+import com.example.ADDB.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

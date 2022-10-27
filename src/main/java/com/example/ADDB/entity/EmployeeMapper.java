@@ -1,6 +1,6 @@
-package com.example.ADDB.Entity;
+package com.example.ADDB.entity;
 
-import com.example.ADDB.Model.EmployeeModel;
+import com.example.ADDB.model.EmployeeModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

@@ -1,4 +1,4 @@
-package com.example.ADDB.Model;
+package com.example.ADDB.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

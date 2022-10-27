@@ -1,6 +1,6 @@
-package com.example.ADDB.Repository;
+package com.example.ADDB.repository;
 
-import com.example.ADDB.Entity.Employee;
+import com.example.ADDB.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.example.ADDB;
 
-import com.example.ADDB.Entity.Employee;
+import com.example.ADDB.entity.Employee;
 import com.example.ADDB.Service.EmployeeService;
 import com.example.ADDB.Service.EmployeeServiceSync;
 import lombok.RequiredArgsConstructor;

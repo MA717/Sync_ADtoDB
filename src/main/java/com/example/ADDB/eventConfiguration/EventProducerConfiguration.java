@@ -1,7 +1,7 @@
-package com.example.ADDB.EventConfiguration;
+package com.example.ADDB.eventConfiguration;
 
 
-import com.example.ADDB.Entity.Employee_Changes;
+import com.example.ADDB.entity.Employee_Changes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
