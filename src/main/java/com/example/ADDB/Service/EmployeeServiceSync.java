@@ -9,17 +9,17 @@ import com.example.ADDB.ldap.queries.EmployeeRepositoyLdap;
 import com.example.ADDB.ldap.queries.LdapQueryAllEmployees;
 import com.example.ADDB.model.EmployeeModel;
 import com.example.ADDB.repository.EmployeeRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.core.builder.CloudEventBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Sinks;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.net.URI;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +27,7 @@ import java.util.Set;
 public class EmployeeServiceSync {
 
 
-    private final Sinks.Many<Message<Employee_Changes>> manyChanged;
+    private final Sinks.Many<CloudEvent> manyChanged;
     private final EmployeeRepositoyLdap employeeRepositoryldap;
     private final EmployeeRepository employeeRepository;
     private final EmployeeService employeeService;
@@ -55,18 +55,24 @@ public class EmployeeServiceSync {
         List<Employee> employees = employeeRepository.findAll();
         employees.stream()
                 .filter(x -> !(updatedEmployee.contains(x.getId())))
-                .forEach(x -> deletedEmployeeAction(x, changesList));
+                .forEach(x -> {
+                    try {
+                        deletedEmployeeAction(x, changesList);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
     }
 
 
-    private Employee deletedEmployeeAction(Employee employee, List<Changes> changesList) {
+    private Employee deletedEmployeeAction(Employee employee, List<Changes> changesList) throws JsonProcessingException {
         fireChangeEvent(employee, changesList);
         employeeRepository.deleteById(employee.getId());
         return employee;
     }
 
-    private Employee createEmployeeAction(EmployeeModel employeeModel) {
+    private Employee createEmployeeAction(EmployeeModel employeeModel) throws JsonProcessingException {
         Employee employee = addNewEmployee(employeeModel);
         List<Changes> changesList = new ArrayList<>();
         changesList.add(Changes.NEWEMPLOYEE_Created);
@@ -74,11 +80,22 @@ public class EmployeeServiceSync {
         return employee;
     }
 
-    private void fireChangeEvent(Employee employee, List<Changes> changesList) {
+
+    private void fireChangeEvent(Employee employee, List<Changes> changesList) throws JsonProcessingException {
         Employee_Changes employeeChanges = Employee_Changes.builder().changesList(changesList).employee(employee).build();
-        manyChanged.emitNext(MessageBuilder.withPayload(employeeChanges).build(), Sinks.EmitFailureHandler.FAIL_FAST);
         log.info(" Changes has occured in the Employee");
         employeeRepository.save(employee);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        manyChanged.emitNext(CloudEventBuilder
+                        .v1()
+                        .withId(UUID.randomUUID().toString())
+                        .withSource(URI.create("http//localhost:8080/employees/syncronize"))
+                        .withType("Event Employee Change data")
+                        .withData(mapper.writeValueAsBytes(employeeChanges))
+                        .build()
+                , Sinks.EmitFailureHandler.FAIL_FAST);
     }
 
     public Employee addNewEmployee(EmployeeModel employeeModel) {
@@ -107,12 +124,22 @@ public class EmployeeServiceSync {
                 .ifPresentOrElse((employee1) -> {
                             List<Changes> changesList = employee1.compareChanges(employeeModeltoEmployeeMapper(employeeModel));
                             if (!changesList.isEmpty()) {
-                                fireChangeEvent(employee1, changesList);
+                                try {
+                                    fireChangeEvent(employee1, changesList);
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
                             presentedEmployee.add(employee1.getId());
                         }, () -> {
-                            Employee employee = createEmployeeAction(employeeModel);
-                            presentedEmployee.add(employee.getId());
+
+                            try {
+                                Employee employee = createEmployeeAction(employeeModel);
+                                presentedEmployee.add(employee.getId());
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+
 
                         }
                 );
