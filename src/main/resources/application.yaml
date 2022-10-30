@@ -42,14 +42,14 @@ spring:
         connection-string: ${CONNECTION_STRING}
         processor:
           checkpoint-store:
-            account-name: messagequeuestorage
+            account-name: ${STORAGE_ACCOUNT_NAME}
             account-key: ${ACCOUNT_KEY}
-            container-name: topic
+            container-name: ${CONTAINER_NAME}
     stream:
       bindings:
 
         supplyChange-out-0:
-          destination: messagequeuehub
+            destination: ${DESTINATION}
 
 
 
@@ -57,7 +57,7 @@ spring:
         definition: supplyChange;
       poller:
         initial-delay: 0
-        fixed-delay: 1000
+        fixed-delay: 10003
   sql:
     init:
       platform: postgres
