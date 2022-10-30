@@ -19,9 +19,9 @@ mt:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: mysecretpassword
+    url: ${URL}
+    username: ${USER_NAME}
+    password: ${PASSWORD}
 
   jpa:
     show-sql: true
@@ -33,17 +33,17 @@ spring:
 
   ldap:
     base: ${MT_ELS_LDAP_BASE_DN:DC=testdom,DC=local}
-    password: ${MT_ELS_LDAP_BIND_PASSWORD:}
-    username: ${MT_ELS_LDAP_BIND_DN:Administrator@testdom.local}
-    urls: ${MT_ELS_LDAP_URLS:ldap://172.25.142.255}
+    password: ${MT_ELS_LDAP_BIND_PASSWORD}
+    username: ${MT_ELS_LDAP_BIND_DN}
+    urls: ${MT_ELS_LDAP_URLS}
   cloud:
     azure:
       eventhubs:
-        connection-string: Endpoint=sb://messegequeue-azure.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=tU4Pxy5oVGne1j+XOPdhW/KaedQyKD/1GFu35p3G8hA=
+        connection-string: ${CONNECTION_STRING}
         processor:
           checkpoint-store:
             account-name: messagequeuestorage
-            account-key: 4fc9Rsqn2RZUQJuRthYUU99TXkbLTEdAdSJWcmWF+IU6Jzbpkyl5/9GYQwSorXzaYq1k/jZaOPKl+AStrsiDvg==
+            account-key: ${ACCOUNT_KEY}
             container-name: topic
     stream:
       bindings:

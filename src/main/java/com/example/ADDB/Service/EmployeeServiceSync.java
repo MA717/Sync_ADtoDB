@@ -91,8 +91,9 @@ public class EmployeeServiceSync {
         manyChanged.emitNext(CloudEventBuilder
                         .v1()
                         .withId(UUID.randomUUID().toString())
+                        .withDataContentType("application/json")
                         .withSource(URI.create("http//localhost:8080/employees/syncronize"))
-                        .withType("Event Employee Change data")
+                        .withType("Employee_Changes")
                         .withData(mapper.writeValueAsBytes(employeeChanges))
                         .build()
                 , Sinks.EmitFailureHandler.FAIL_FAST);
