@@ -1,0 +1,43 @@
+
+
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:latest:///
+    username: postgres
+    password: mysecretpassword
+
+  jpa:
+
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    baseline-on-migrate: true
+
+  cloud:
+    azure:
+      eventhubs:
+        connection-string: Endpoint=sb://messegequeue-azure.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=tU4Pxy5oVGne1j+XOPdhW/KaedQyKD/1GFu35p3G8hA=
+        processor:
+          checkpoint-store:
+            account-name: ${STORAGE_ACCOUNT_NAME}
+            account-key: ${ACCOUNT_KEY}
+            container-name: ${CONTAINER_NAME}
+    stream:
+      bindings:
+
+        supplyChange-out-0:
+          destination: ${DESTINATION}
+
+
+
+      function:
+        definition: supplyChange;
+      poller:
+        initial-delay: 0
+        fixed-delay: 10003
+  sql:
+    init:
+      platform: postgres
+server:
+  port: 8082

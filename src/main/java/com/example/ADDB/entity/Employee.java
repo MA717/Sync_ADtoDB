@@ -73,7 +73,8 @@ public class Employee {
 
 
     private List<Changes> proceedManagerChanger(List<Changes> changes, Employee manager) {
-        if (this.getManager() != null) {
+
+        if (this.getManager() != null && manager != null ) {
             if (! this.getManager().getDn().toString().equals(manager.getDn().toString())) {
                 this.setManager(manager);
                 changes.add(Changes.MANAGER_Change);

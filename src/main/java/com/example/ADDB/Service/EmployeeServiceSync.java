@@ -85,7 +85,6 @@ public class EmployeeServiceSync {
         Employee_Changes employeeChanges = Employee_Changes.builder().changesList(changesList).employee(employee).build();
         log.info(" Changes has occured in the Employee");
         employeeRepository.save(employee);
-
         ObjectMapper mapper = new ObjectMapper();
 
         manyChanged.emitNext(CloudEventBuilder
@@ -124,6 +123,7 @@ public class EmployeeServiceSync {
                 .findByDn(employeeModel.getDn().toString())
                 .ifPresentOrElse((employee1) -> {
                             List<Changes> changesList = employee1.compareChanges(employeeModeltoEmployeeMapper(employeeModel));
+
                             if (!changesList.isEmpty()) {
                                 try {
                                     fireChangeEvent(employee1, changesList);
