@@ -36,6 +36,7 @@ public class EmployeeService {
 
     public Optional<Employee> getManager(EmployeeModel employee) {
         return Optional.ofNullable(employeeRepository.findByDn(employee.getManager())).orElse(null);
+
     }
 
 

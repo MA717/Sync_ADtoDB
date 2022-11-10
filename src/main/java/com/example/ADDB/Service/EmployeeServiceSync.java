@@ -85,8 +85,8 @@ public class EmployeeServiceSync {
         Employee_Changes employeeChanges = Employee_Changes.builder().changesList(changesList).employee(employee).build();
         log.info(" Changes has occured in the Employee");
         employeeRepository.save(employee);
-        ObjectMapper mapper = new ObjectMapper();
 
+        ObjectMapper mapper = new ObjectMapper();
         manyChanged.emitNext(CloudEventBuilder
                         .v1()
                         .withId(UUID.randomUUID().toString())

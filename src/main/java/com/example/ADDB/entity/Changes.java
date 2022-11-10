@@ -5,7 +5,6 @@ public enum Changes {
     SURNAME_Change,
     FIRSTNAME_Change,
     MOBILENUMBER_Change,
-
     USERNAME_Change,
     MANAGER_Change,
     TITLE_Change,
