@@ -1,3 +1,3 @@
-ALTER table Employee Add manager_id bigint ;
-ALTER TABLE Employee
-    ADD CONSTRAINT fk_manager_id FOREIGN KEY (manager_id) REFERENCES Employee (id);
+ALTER table employee_db Add manager_id bigint ;
+ALTER TABLE employee_db
+    ADD CONSTRAINT fk_manager_id FOREIGN KEY (manager_id) REFERENCES employee_db (id);

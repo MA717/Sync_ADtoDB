@@ -1,6 +1,6 @@
 package com.example.ADDB.ldap.queries;
 
-import com.example.ADDB.model.EmployeeModel;
+import com.example.ADDB.model.Employee;
 import com.example.ADDB.config.LdapAttributeNames;
 import com.example.ADDB.ldap.EmployeeAttributeMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +29,11 @@ public class EmployeeRepositoyLdap {
 
 
     @Cacheable("employees")
-    public List<EmployeeModel> queryMany(PredefinedLdapQuery query) {
+    public List<Employee> queryMany(PredefinedLdapQuery query) {
 
         log.debug("Executing LDAP queryMany using {}", query.getClass().getName());
 
-        List<EmployeeModel> searchResults = ldapTemplate.search(
+        List<Employee> searchResults = ldapTemplate.search(
                 query.buildQuery(ldapUserOU, attributeNames),
                 employeeAttributeMapper
         );

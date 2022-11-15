@@ -1,11 +1,7 @@
 package com.example.ADDB.TestContainer;
 
-import com.example.ADDB.entity.Employee;
-import com.example.ADDB.repository.EmployeeRepository;
+import com.example.ADDB.entity.EmployeeEntity;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -24,7 +20,7 @@ public class TestContainer {
     @Test
     public void Create_test_fom_DB() {
 
-        Employee employee = Employee.builder()
+        EmployeeEntity employeeEntity = EmployeeEntity.builder()
                 .email("mohamedmemowow")
                 .title("Berater")
                 .mobileNumber("01243243525")
@@ -34,9 +30,9 @@ public class TestContainer {
                 .username("Roni")
                 .build();
 
-//        Employee employee1 = employeeRepository.findByUsername(employee.getUsername());
+//        EmployeeEntity employee1 = employeeRepository.findByUsername(employeeEntity.getUsername());
 //        employeeRepository.deleteById(employee1.getId());
-//        Employee employee2 = employeeRepository.findByUsername(employee.getUsername());
+//        EmployeeEntity employee2 = employeeRepository.findByUsername(employeeEntity.getUsername());
 //        assertEquals(employee2, null);
     }
 }

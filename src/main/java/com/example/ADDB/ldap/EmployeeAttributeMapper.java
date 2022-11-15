@@ -1,6 +1,6 @@
 package com.example.ADDB.ldap;
 
-import com.example.ADDB.model.EmployeeModel;
+import com.example.ADDB.model.Employee;
 import com.example.ADDB.config.LdapAttributeNames;
 
 import lombok.RequiredArgsConstructor;
@@ -12,17 +12,17 @@ import javax.naming.NamingException;
 
 @Component
 @RequiredArgsConstructor
-public class EmployeeAttributeMapper implements ContextMapper<EmployeeModel> {
+public class EmployeeAttributeMapper implements ContextMapper<Employee> {
 
     private final LdapNameUtil ldapNameUtil;
 
     private final LdapAttributeNames attributeNames;
 
     @Override
-    public EmployeeModel mapFromContext(Object ctx) throws NamingException {
+    public Employee mapFromContext(Object ctx) throws NamingException {
         DirContextAdapter context = (DirContextAdapter) ctx;
 
-        return EmployeeModel.builder()
+        return Employee.builder()
                 .dn(ldapNameUtil.addLdapBase(context.getDn()))
                 .givenName(context.getStringAttribute(attributeNames.getGivenName()))
                 .surname(context.getStringAttribute(attributeNames.getSurname()))

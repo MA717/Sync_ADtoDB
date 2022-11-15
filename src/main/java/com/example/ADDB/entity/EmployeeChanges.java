@@ -1,16 +1,15 @@
 package com.example.ADDB.entity;
 
+
+import com.example.ADDB.model.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @Builder
-public class Employee_Changes {
-
+public class EmployeeChanges {
     Employee employee ;
-    List<Changes> changesList ;
+    Changes changes ;
 }

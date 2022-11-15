@@ -9,7 +9,7 @@ import javax.naming.Name;
 
 @Data
 @Builder
-public class EmployeeModel {
+public class Employee {
 
     @JsonIgnore
     private Name dn;
@@ -26,5 +26,7 @@ public class EmployeeModel {
     private String mobileNumber;
     private String title;
     private String department;
+
+    @JsonIgnore
     private String manager ;
 }

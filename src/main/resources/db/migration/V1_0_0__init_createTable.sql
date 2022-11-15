@@ -1,5 +1,5 @@
 
-Create Table Employee(
+Create Table employee_db(
     id bigserial not null ,
     department varchar(255) ,
     email varchar(255) not null ,
