@@ -188,7 +188,7 @@ public class EmployeeSyncService {
 
 
     private EmployeeEntity deletedEmployeeAction(EmployeeEntity employee) {
-        employeeSyncRepository.deleteById(employee.getId());
+        employeeSyncRepository.deleteByDn(employee.getDn());
         fireChangeEvent(employee, Changes.EMPLOYEE_DELETED);
         return employee;
     }

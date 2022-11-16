@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,8 @@ public interface EmployeeSyncRepository extends JpaRepository<EmployeeEntity, Lo
             "or employee.givenName LIKE CONCAT('%',:searchTerm,'%')  " +
             " or employee.surname  LIKE CONCAT('%',:searchTerm,'%')   ")
     List<EmployeeEntity> getEmployeeMatch(@Param("searchTerm") String searchTerm);
+    @Transactional
+    void deleteByDn(String dn);
 }
 
 
